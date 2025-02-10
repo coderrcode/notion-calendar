@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Bar for Week, Month, and Year</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffe6f2;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            color: #ff4081;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 20px;
+            height: 30px;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Pink color scheme for progress bars */
+        .week-progress {
+            background-color: #ff66b2;
+        }
+
+        .month-progress {
+            background-color: #ff99cc;
+        }
+
+        .year-progress {
+            background-color: #ff4081;
+        }
+
+        .progress-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .progress-label {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Progress Through the Week, Month, and Year</h2>
+
+        <!-- Week Progress -->
+        <div class="progress-container">
+            <div class="progress-label">Progress Through the Week</div>
+            <div class="progress-bar">
+                <div class="progress-bar-inner week-progress" id="week-progress">
+                    <div class="progress-text" id="week-text"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Month Progress -->
+        <div class="progress-container">
+            <div class="progress-label">Progress Through the Month</div>
+            <div class="progress-bar">
+                <div class="progress-bar-inner month-progress" id="month-progress">
+                    <div class="progress-text" id="month-text"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Year Progress -->
+        <div class="progress-container">
+            <div class="progress-label">Progress Through the Year</div>
+            <div class="progress-bar">
+                <div class="progress-bar-inner year-progress" id="year-progress">
+                    <div class="progress-text" id="year-text"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateProgressBars() {
+            // Get current date
+            const today = new Date();
+            const currentDay = today.getDate();
+            const currentMonth = today.getMonth() + 1; // 1-12
+            const currentYear = today.getFullYear();
+
+            // Week Progress (assumes weeks start on Sunday)
+            const startOfWeek = new Date(currentYear, currentMonth - 1, currentDay - today.getDay());
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(endOfWeek.getDate() + 6);
+            const totalWeekDays = (endOfWeek - startOfWeek) / (1000 * 60 * 60 * 24) + 1; // Total days in week
+            const progressWeek = (currentDay - startOfWeek.getDate()) / totalWeekDays * 100;
+
+            // Month Progress
+            const totalDaysInMonth = new Date(currentYear, currentMonth, 0).getDate(); // Total days in month
+            const progressMonth = (currentDay / totalDaysInMonth) * 100;
+
+            // Year Progress
+            const totalDaysInYear = (new Date(currentYear, 11, 31) - new Date(currentYear, 0, 1)) / (1000 * 60 * 60 * 24); // Total days in year
+            const progressYear = ((currentDayOfYear(today) - 1) / totalDaysInYear) * 100;
+
+            // Set Progress Bars
+            document.getElementById("week-progress").style.width = progressWeek + "%";
+            document.getElementById("month-progress").style.width = progressMonth + "%";
+            document.getElementById("year-progress").style.width = progressYear + "%";
+
+            // Set Text on Progress Bars
+            document.getElementById("week-text").innerText = Math.round(progressWeek) + "%";
+            document.getElementById("month-text").innerText = Math.round(progressMonth) + "%";
+            document.getElementById("year-text").innerText = Math.round(progressYear) + "%";
+        }
+
+        // Helper function to get the day of the year (1 to 365)
+        function currentDayOfYear(date) {
+            const start = new Date(date.getFullYear(), 0, 0);
+            const diff = date - start;
+            const oneDay = 1000 * 60 * 60 * 24;
+            return Math.floor(diff / oneDay);
+        }
+
+        // Run the update function
+        updateProgressBars();
+
+    </script>
+
+</body>
+</html>
